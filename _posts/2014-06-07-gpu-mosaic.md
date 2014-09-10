@@ -4,6 +4,7 @@ layout: post
 ---
 
 A lot of remote sensing application involve creating maps from raw sensor data either in real-time or in post-processing. In this article we will focus on *rasters*, uniform 2D grids of cells such as images and elevation grids.
+{{excerpt_separator}}
 The chart below illustrate the general process of turning raw sensor data into rasters:
 
 ![ rasterize chart]( {{site.baseurl}}/assets/images/rasterize-chart.png)

@@ -31,7 +31,8 @@ about: 'about.html'
             <h2 class="post-title"><a href="{{ post.url }}">{{ post.title }}</a></h2>
         </header>
         <section class="post-excerpt">
-            {{ post.excerpt }}
+            <!--{{ post.excerpt }}-->
+            {{ post.content | strip_html | truncatewords:55}}
         </section>
             <span class="post-meta"><time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date_to_string }}</time> {{!tags prefix="on "}}</span>
     </article>
