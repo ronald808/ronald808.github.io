@@ -1,0 +1,13 @@
+digraph g  {
+	 graph [ rankdir=LR];
+	 node [shape = record,height=.1, fontname="Sans", fontsize="11pt"];
+	 edge [ fontname="Sans", fontsize="12pt"];
+ xml [label = "PacketA.xml" ];
+ python [ label= "Xml2Cpp.py\n(Python)"];
+ doth [ label="PacketA.h"];
+ dotcpp [ label="PacketA.cpp"];
+
+xml -> python [label="input"];
+python -> doth [label="generate"];
+python ->dotcpp [label="generate"];
+}
