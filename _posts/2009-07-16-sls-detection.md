@@ -3,7 +3,7 @@ layout: post
 title: Objects Detection in  Sonar Images
 ---
 
-Side-looking sonars transmit acoustic pulses and record their back-scatter to form images of the seafloor. These systems are very efficient at scanning large area for things like geologic formation, fish habitat, mines, ship/plane wrecks, etc.  Typical SLS images looks like this:
+Side-looking sonars transmit acoustic pulses and record the back-scattered energy to form images of the seafloor. These systems are very efficient at scanning large area for things like geologic formation, fish habitat, mines, ship/plane wrecks, etc. The image below (left) show the principle of operation of SLS system and the shadow created by a object on the seafloor. On the right image, we can see a typical SLS image showing a mooring block and its shadow:
 
 <table>
 <tr>
@@ -32,9 +32,9 @@ Due to the geometry of the problem, objects of identical size will cast differen
 
 We can see that the far range samples have lower amplitude that near range ones due to energy dispersion, so we need to normalize image across track (above, right)
 
-If we define an approximate size for the object of interest (green box), we can now run a match-filter to detect shadow over background area and define their bounding box(red boxes).
+If we define an approximate size for shadows of interest (green box), we can now run a match-filter to detect shadow over background area and define their bounding box(red boxes).
 
-We read the process for highlights (object returns) to create 3 bounding boxes: shadow, object and capture area to be save to an object database:
+We read the process for highlights (object returns) to create 3 bounding boxes: shadow, object and capture area to be store on disk for further analysis:
 
 
 ![SLS image](/assets/images/sls-step4.png )  

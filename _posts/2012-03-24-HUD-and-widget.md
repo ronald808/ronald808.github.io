@@ -3,17 +3,17 @@ title: Semi-transparent widgets over a 3D Viewport
 layout: post
 ---
 
-Most 3D software have a need for some form of 2D overlay in screen-space coordinates with support for transparent (or semi-transparent) background. How to realize this with you favorite 3D API is pretty straigh-forward:
- 
-- Render 3D scene
-- Switch to ortho projection with appropriate ModelView matrix/Vertex Shader to draw in “pixel-coordinate”
-- Render 2D HUD content
+3D applications often have a 2D overlay to display information in screen space. This head-Up Display (HUD) may be drawn directly from the 3D App:
+
+1. Render 3D content (Perspective Projection)
+2. Setup Ortho projection for screen-space drawing.
+3. Render 2D HUD content
 
 ![Head Up Display](/assets/images/hud-view.png)
 
-### Simple Head-Up Display (HUD) ? ###
+### Simple Head-Up Display (HUD)###
 
-If you only need a simple HUD composed of read-only, simple elements, you may not need much:
+When the HUD does not require user inputs and simple UI elements are needed, we may draw them directly: 
 
 - Icons, frames and decoration may just be images stored in a texture atlas and render over quads in pixel coordinate
 - Text elements may require a high-level library if you need many fonts type/size combination, paragraph layout or strong unicode support. On the other end, for simple elements, you could also choose to deal with text rendering yourself using [FreeType](http://www.freetype.org) or an OS-dependent equivalent. Textual overlay is usually broken down into “dynamic” text (e.g.numbers) and “static text” (labels, warning, info, etc.). 

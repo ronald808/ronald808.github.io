@@ -3,7 +3,7 @@ layout: post
 title: Code generation and data format parsing
 --- 
 
-Writing binary data parsers is not overly exciting. Unfortunately, in a field where each sensor system has its own binary format, we have accumulated a lot of code dealing with parsing remote sensing data raw files.
+Writing binary data parsers is not overly exciting. Unfortunately, in a field where each sensor system has its own binary format, we have accumulated a lot of code dealing with parsing binary data files.
 
 With a bit of experience, a few common features emerge: 
 
@@ -39,7 +39,7 @@ struct NavFromFormatB {
 {% endhighlight %}
 
 It would be nice to have a "meta" information on the structure so to know the *type* of each field ( e.g. time, longitude, latitude, etc.), a description of the field ( "longitude from Packet XYZ in format B" )
-The simple API to query these meta-info may look like this:
+A simple API to query these meta-info may look like this:
 
 {% highlight  cpp %}
 // struture meta API:
@@ -58,7 +58,7 @@ Of course we should implement these function as static class member accessing on
 
 Now, we will have a LOT of different packet types, so we describe packets in a XML file and generate our C++ code with a python script: 
 
-![graph](/assets/images/graph1.png)
+<img src = "{{site.baseurl}}/assets/images/graph1.png" style={width:"552px"}/>
 
  
 For example, <code>NavFromFormatA.xml</code> could look like this:

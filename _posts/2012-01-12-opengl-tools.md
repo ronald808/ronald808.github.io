@@ -23,9 +23,9 @@ Also, GLSL has no <code>#include</code> directive so it usually a good idea to w
 
 ###API Calls debugging ###
 
-One very nice thing about D3D is the quality of the error messages you get from the API (Use <code>D3D11\_CREATE_DEVICE\_DEBUG </code> flag in <code>D3D11CreateDevice()</code>).  OpenGL is more evasive: If you're lucky <code>glGetError()</code> will give you a <code>GL\_INVALID\_ENUM, GL\_INVALID\_VALUE, GL\_INVALID\_OPERATION</code> to think about. Getting an undocumented  error code for a specific call is not unheard of. Due to the way the OpenGL state-machine works, you may have to check quite a bit of setup calls before you figure out what went wrong. 
+One very nice thing about D3D is the quality of the error messages you get from the API (Using <code>D3D11\_CREATE\_DEVICE\_DEBUG </code> flag in <code>D3D11CreateDevice()</code>).  OpenGL is more evasive: If you're lucky <code>glGetError()</code> will give you a <code>GL\_INVALID\_ENUM, GL\_INVALID\_VALUE, GL\_INVALID\_OPERATION</code> to think about. Getting an undocumented  error code for a specific call is not unheard of. Due to the way the OpenGL state-machine works, you may have to check quite a bit of setup calls before you figure out what went wrong. 
 
-The easiest way to do this is to print out the call log, but for it to useful, we need the ubiquitous GLenum parameters to print as strings (what is 0x84C0 again?). Fortunately the (large) Open GL API is [available in XML format](https://cvs.khronos.org/svn/repos/ogl/trunk/doc/registry/public/api/gl.xml) so we can use python to generate some C headers for us. GL calls are wrapped into <code>glGetError()</code> checks and -as an option- print function with GLenum expanded to strings. We use macros to make sure these checks are not included in the Release Build. 
+The easiest way to do this is to print out the call log, but for it to useful, we need the ubiquitous GLenum parameters to print as strings (what is 0x84C0 again?). Fortunately the (large) Open GL API is [available in XML format](https://cvs.khronos.org/svn/repos/ogl/trunk/doc/registry/public/api/gl.xml) so we can use Python to generate C headers for us. The generated code injects <code>glGetError()</code> checks and log function with GLenum expanded to strings when needed. We use macros to make sure these checks are not included in the Release Build. 
 
 ###Math Library###
 
@@ -39,7 +39,7 @@ LLVMpipe is surprisingly fast for a CPU based implementation and (mostly) suppor
 - No anisotropic filtering (due to patents)
 - Single-threaded (running 2 separate contexts in two seperated threads is not safe). LLVM 3.x is can be multi-threaded and some work has been done in Mesa to leverage this, but from my experience, it's not there yet.
 - Support for older CPU may be sketchy. LLVMpipe may not be tested with older CPU architecture so Mesa+LLVM combinaison may not work. Also, getting a valid build on Windows is a bit involved...  
-- No docs. You have the code and that's it. Franckly, LLVMpipe code is not the most straight-forward code to read 
+- No docs. You have the code and that's it. LLVMpipe code is not the easiest code to read... 
 
 
 		
