@@ -1,6 +1,7 @@
 name: 			Remote Sensing and GIS 
 description: 	A Coder's Journey
 meta_description: "Remote Sensing and Geospacial"
+excerpt_separator: ""
 
 markdown: redcarpet
 pygments: true
@@ -10,4 +11,3 @@ paginate: 15
 # Details for the RSS feed generator
 url:            'blog-url'
 author:         'Ronald Poirrier'
-
