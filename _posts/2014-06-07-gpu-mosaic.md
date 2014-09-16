@@ -6,7 +6,7 @@ layout: post
 The purpose of many remote sensing application is to create rasters: 2D arrays of samples such as images and elevation maps. How to turn sensor data into meaningful raster is application dependent be usually involves the following steps: 
  
 
-<img src= "{%site.baseurl%}/assets/images/rasterize-chart.png" style="{height:100px}"/>
+<img src= "{{site.baseurl}}/assets/images/rasterize-chart.png" style="{height:100px}"/>
  
 
 "Processing" and "rasterization" are computationally intensive steps which usually slow-down post-processing of data into raster products. Performance is event more of a problem if we need to create/update our rasters on the fly for real-time display purpose. 
@@ -16,7 +16,7 @@ Graphical Processing Unit (GPU) are extremely fast at certain parallel tasks so 
 
 A forward-look sonar is an "acoustic flash-light" that will insonify the seabed to create a image off the reflected sound waves. FLS systems generate many images per second so when mounted on a moving platform they become an powerful tool to map underwater region in zero visibility.
 
-![fls mosaic]({%site.baseurl%}/assets/images/fls-mosaic3.png)
+![fls mosaic]({{site.baseurl}}/assets/images/fls-mosaic3.png)
 
 In the case of a FLS, GPU acceleration is highly desirable as we may need to transform and rasterize over 8 million samples per seconds. 
 
@@ -24,7 +24,7 @@ In the case of a FLS, GPU acceleration is highly desirable as we may need to tra
 
 To create an accurate map, we need to know how to interpret each sample from the sensor, calculate its position and place it on a raster. The sector data usually consist of a 2-D array of 16 bit amplitude sampled in polar coordinate:
 
-![ Sector FLS]({%site.baseurl%}/assets/images/sector-shape.png)
+![ Sector FLS]({{site.baseurl}}/assets/images/sector-shape.png)
 
 Meta-data such as longitude, latitude and heading of the platform will allow us to geocode each sector image and add it to our raster mosaic.
 
@@ -32,7 +32,7 @@ Meta-data such as longitude, latitude and heading of the platform will allow us 
 
 First step is to turn our rectangular array of sample into a sector-shaped image. The GPU can do this very efficiently by texture-mapping our rectangular array over a sector-shaped mesh of triangles:
 
-![Mesh]({%site.baseurl%}/assets/images/fls2d-mesh.png)
+![Mesh]({{site.baseurl}}/assets/images/fls2d-mesh.png)
 
 
 Degenerated triangles (horizontal lines on the image above) connects triangles rows to create a single triangle strip for rendering performance.  Degenerated triangles will be discarded by the GPU when rendering the texture-mapped sector.
@@ -43,7 +43,7 @@ To avoid elongated triangles, we space vertexes along the range dimension to for
 <!--
 <img src="http://latex.codecogs.com/gif.latex?\left\{\begin{matrix}&space;r_{n-1}&space;=1.0&space;&&space;i=0\\&space;r_{n-i-1}&space;=&space;r_{n-i}-min(&space;d_{min},&space;2*sin(&space;\frac{d\theta}{2}))&space;&&space;i&space;\in&space;[1,n-1],&space;&&space;r_{n-i}>=r_{min}>=0;&space;\end{matrix}\right." />
 -->
-![equation]({%site.baseurl%}/assets/images/equation-1.gif)
+![equation]({{site.baseurl}}/assets/images/equation-1.gif)
 
 *d&theta;* is the angular increment chosen for the mesh. 
 
