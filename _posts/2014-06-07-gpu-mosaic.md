@@ -61,24 +61,25 @@ To optimize the rasterization process, we batch multiple frame together to rende
 
 
 
-####GPU: Beam mapping####
+####Beam Mapping with 1-D Texture####
 
 Unfortunately, some FLS do not create equi-angular beams (i.e.beams spacing is not constant across the arc). As a consequence, texture-mapping the data directly on the mesh would not be accurate. Here too, the GPU can help and provide an efficient solution: we will use a 1-D texture to implement the beam-mapping function: u<sub>actual</sub> = F(u<sub>linear</sub>)
 
-{}
-
-####GPU: Frame Feathering####     
-
-As we can see on the images below, frame-to-frame transition are somewhat distracting, so we would like to introduce some blending at the edge of the frames to create a seamless raster.
+![]( {{site.baseurl}}/assets/images/beam-angle-plot-small.png )
 
 
-{ no feathering}
+####Frame Feathering in HLSL shader####
 
+As we can see on the images below, frame-to-frame transition are somewhat distracting (right), so we would like to introduce some blending at the edge of the frames to create a seamless raster (left):
 
-{with feathering}
+<table>
+<tr>
+<td><img src="{{site.baseurl}}/assets/images/fls-feathering-off.jpg"/></td>
+<td><img src="{{site.baseurl}}/assets/images/fls-feathering-on.jpg"/></td>
+</tr>
+</table>
 
-
-To support alpha-blending, we add a transparency channel to our raster so we now have two 16-bit channels {amplitude, transparency}. We implement feathering in the pixel shader using a <code>smoothstep()</code> function around the edge of each frame. 
+To implement this alpha-blending, we add a transparency channel to our raster so we now have two 16-bit channels {amplitude, transparency}. We implement feathering in the pixel shader using a <code>smoothstep()</code> function around the edge of each frame. 
 
 {% highlight c %}
 // HLSL : Pixel Shader
@@ -95,7 +96,7 @@ Which creates the following frame-feathering (white: opaque, magenta: fully tran
 
 ![]( /assets/images/multi-frame-feathering.png )
 
-### GPU Rasterizer ###
+### GPU Rasterizer (Direct 3D) ###
 
 Since the area covered by the sensor may be large, we should not assume that our raster will fit in video memory. In real-time we may not even now which area will be surveyed, so we need to come up with a dynamic way of managing our raster. Special care must also be taken when blending new frame over previously mapped data. 
 To support this, we store our raster as an expending grid of tiles. We will add tiles to the raster as the area covered by the sensor expends. If the new frames overlap existing non-empty tiles, we will load these background tiles first:
