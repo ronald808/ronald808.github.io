@@ -9,19 +9,21 @@ The purpose of many remote sensing applications is to create rasters: 2D arrays 
 <img src= "{{site.baseurl}}/assets/images/rasterize-chart.png" style="{height:100px}"/>
  
 
-*"Processing"* and *"rasterization"* are computationally intensive steps which usually slow-down the post-processing of data into raster products. For on-the-fly visualization apps, processing performance becomes even more critical to keep up with incoming data. In this article, we will explore  how we can tap Graphical Processing Units (GPU) computing power to boost raster creation.
+*"Processing"* and *"rasterization"* are computationally intensive steps which usually slow-down the post-processing and rasterization of data. For on-the-fly visualization apps, processing performance becomes even more critical to keep up with incoming data. In this article, we will explore how we can use the computing power of Graphical Processing Units (GPU) to speed up raster creation.
 
 ### Example: Forward-Look Sonar (FLS) ###
 
-A forward-look sonar is an "acoustic flash-light" which insonify the seabed to create an image off the reflected sound waves. FLS systems generate many images per second so when mounted on a moving platform they become an powerful tool to map underwater region in zero visibility.
+A forward-look sonar is an "acoustic flash-light" which insonifies the seabed to derives an image from the reflected sound waves. FLS systems generate several images per second, so when they are mounted on a moving platform they become an powerful tool to map underwater region in zero visibility.
 
 ![fls mosaic]({{site.baseurl}}/assets/images/fls-mosaic3.png)
 
-FLS mosaics are a good candidates for GPU acceleration since we may have to rasterize over 8 million samples per seconds.
+FLS mosaics are a good candidates for GPU acceleration since we may have to rasterize over 8 million samples per second.
+
+![fls mosaic]({{site.baseurl}}/assets/images/samm-screenshot.jpg)
 
 ####Data Format and Geocoding####
 
-To create an accurate map, we need to know how to interpret each sample from the sensor, calculate its position and place it on a raster. The sector data usually consist of a 2-D array of 16 bit amplitude sampled in polar coordinate:
+To create an accurate map, we need to know how to interpret every sample from the sensor, calculate their position and place them on a raster. The sector data usually consists of a 2-D array of 16-bit amplitude sampled in polar coordinates:
 
 ![ Sector FLS]({{site.baseurl}}/assets/images/sector-shape.png)
 
@@ -31,10 +33,18 @@ Meta-data such as longitude, latitude and heading of the platform will allow us 
 
 The first step is to turn our rectangular array of samples into a sector-shaped image. The GPU can do this very efficiently by texture-mapping our rectangular array over a sector-shaped mesh of triangles:
 
+<!--
+<table>
+<tr>
+<td><img src="{{site.baseurl}}/assets/images/fls2d-mesh.png"/><td>
+<td><img src="{{site.baseurl}}/assets/images/fls-textured-sector.jpg"/></td>
+</tr>
+</table>
+-->
 ![Mesh]({{site.baseurl}}/assets/images/fls2d-mesh.png)
+![Mesh]({{site.baseurl}}/assets/images/fls-textured-sector.jpg)
 
-
-Degenerated triangles (horizontal lines on the image above) connect rows of triangles into a single triangle strip for rendering performance.  Degenerated triangles will be discarded by the GPU when rendering the texture-mapped sector.
+Degenerated triangles (horizontal lines on the image above) connect rows of triangles into a single triangle strip for rendering performance. Degenerated triangles will be discarded by the GPU when rendering the texture-mapped sector.
 
 To avoid elongated triangles, we space vertexes along the range dimension to form (almost) isosceles triangles:  
 
@@ -45,7 +55,7 @@ To avoid elongated triangles, we space vertexes along the range dimension to for
 
 *d&theta;* is the angular increment chosen for the mesh. 
 
-As the sensor moves and rotate between frames, we will need to recompute the position of the vertexes in the mesh for every frame. Ideally we would like the GPU to perform these computations to free up CPU cycles. To do so, we will load a unit (rectangular) grid mesh into a vertex buffer and displace its vertexes in the vertex shader to form the sector mesh shown above.
+As the sensor moves and rotates between frames, we need to recompute the real world position of the vertexes in the mesh for every frame. Ideally, we would like the GPU to perform these computations to free up CPU cycles. To do so, we load a unit (rectangular) grid mesh into a vertex buffer and displace its vertexes directly within the vertex shader to form the sector mesh shown above.
 
 <table>
 <tr>
@@ -59,12 +69,12 @@ As the sensor moves and rotate between frames, we will need to recompute the pos
 ![]( /assets/images/multi-frame-stacked.png )
 
 
-To optimize the rasterization process, we batch multiple frames together to render them at once. Using the same degenerated-triangles technique, we connect the meshes together and render them efficiently in a single draw-call per batch.  We pack sensor data for the batch into a single texture and compute texture coordinates accordingly. Finally, we group per-frame info (sensor position, heading, arc, etc) into a float texture for vertex displacement computation in the shader. This saves video memory since we do not have to repeat these meta-data per vertex.
+To optimize the rasterization process, we group multiple frames together to render them at once. Using the same degenerated-triangle technique as described above, we connect the grouped meshes together and render them efficiently in a single draw-call.  We pack sensor data for the grouped framed into a single texture and compute texture coordinates accordingly. Finally, we also group per-frame info (sensor position, heading, arc, etc) into a float texture for vertex displacement computation in the shader. This saves video memory since we do not have to repeat these meta-data per vertex.
 
 
 ####Beam Mapping with 1-D Texture (Pixel Shader)####
 
-Unfortunately, some FLS do not create equi-angular beams (i.e.beam spacing is not constant across the arc) so linear texture-mapping would not be map samples correctly. Here too, the GPU can help and provide an efficient solution: we could use a 1-D texture to implement the beam-mapping function: u<sub>actual</sub> = F(u<sub>linear</sub>)
+Unfortunately, some FLS do not create equi-angular beams (i.e.beam spacing is not constant across the arc) so linear texture-mapping would not map samples correctly. Here too, the GPU can help and provide an efficient solution: we use a 1-D texture to implement the beam-mapping function: u<sub>actual</sub> = F(u<sub>linear</sub>)
 
 ![]( {{site.baseurl}}/assets/images/beam-angle-plot-small.png )
 
@@ -101,20 +111,20 @@ Which creates the following frame-feathering (white: opaque, magenta: fully tran
 
 ### GPU Rasterizer (Direct 3D) ###
 
-Since the survey area may be large, we should not assume our mosaic will fit in video memory. In an on-the-fly scenario, we may not even know which area will be covered, so a dynamic way of managing our raster is necessary. In addition, our data structure should allow us to blend new frame over previously mapped data. With this in mind, we define our raster mosaic as an expending grid of fixed-size tiles. We will add tiles to the raster as the area covered by the sensor expends. If new frames overlap existing non-empty tiles, we will load these background tiles first:
+Since the survey area may be large, we can't assume that our mosaic will fit in video memory. In an on-the-fly rendering scenario, we may not even know upfront which area will be covered, so we need to manage our raster dynamically. Additionally, the  data structure should allow blending new frames over previously mapped data. With this in mind, we define our raster mosaic as an expending grid of fixed-size tiles. We add tiles to the raster as the area covered by the sensor expends:
 
 1. Load new batch of frames to GPU 
 1. Render pass to compute **actual** "tile footprint" of the batch (i.e. which background tiles will be updated?, which new tile will be created?)
 2. Load *missing* (colliding AND not empty!) background tiles to GPU tile cache
-3. Place background tile from tile cache to render target
-4. Render the batch on render target
-5. Save "changed" tiles back to render target 
+3. Place background tile from tile cache to the render target
+4. Render the batch on the render target
+5. Save "changed" tiles back to the tile buffer 
 
 ![]( /assets/images/rasterize-diag.png)
 
     
-At the implementation level, the tile cache is simply a texture array (say 4 slice of 8x8 tiles of 256<sup>2</sup> texels) coupled with a Least Recently Used (LRU) caching system to evict the "oldest" tiles when room is needed for the newly mosaic data. Evicted tiles are flushed to disk but will be streamed back to GPU when needed.
+At the implementation level, the tile cache is simply a texture array (such as 4 slices of 8x8 tiles of 256<sup>2</sup> texels) coupled with a Least Recently Used (LRU) caching system to evict the "oldest" tiles when room is needed for the newly mosaicked data. Evicted tiles are flushed to disk but will be streamed back to GPU when needed.
 
-Depending on the rendering needs , we may  task the GPU with creating level-of-detail (mipmaps) of the tiles before we read them back to system memory. My previous article [on raster rendering]({% post_url 2013-12-05-gpu-gis %}) details on how to use the GPU to render our raster efficiently. 
+Depending on the rendering needs, we may task the GPU with creating level-of-detail (mipmaps) of the tiles before we read them back to system memory. My previous article [on raster rendering]({% post_url 2013-12-05-gpu-gis %}) details how to use the GPU to render our raster efficiently. 
 
 
