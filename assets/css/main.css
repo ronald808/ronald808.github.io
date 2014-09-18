@@ -33,3 +33,86 @@ img.profile {
   	border-radius: 50px;
 }
 
+
+
+/*-------------- POST stuff ------------------*/
+
+
+#post-col {
+   float:left;
+   margin:auto;
+}
+
+
+/* IE would ignore max width otherwise and images in table would overflow */
+article table td img {
+	/* Keep images centred and within the bounds of the post-width */
+    display: block;
+    width: 95%;
+    height: auto;
+    margin: 0 auto;
+    padding: 0.1em 0;
+}
+
+#archive-col {
+   float:left;
+   margin:0;
+   width:8em;
+   margin-right: 1em;
+   padding-right:0.5em;
+   padding-left: 1.5em;
+   padding-bottom:1em;
+   margin-left:0.5em;
+   margin-top:0;
+   font-size: 0.8em;
+   color:#aaa;
+   font-family: 'Open Sans';
+   border: solid 1px #ddd ;
+   background-color : #eee;
+   border-radius: 6px;
+}
+#archive-col h5 {
+    margin:0;
+    padding:0;
+    margin-top:1em;
+    font-size:1.0em;
+}
+#archive-col a {
+   color:#666;
+   text-decoration: none;    
+}
+#archive-col a:hover{
+    color:#333;
+    font-weight: bold;
+}
+#archive-col ul {
+    margin:0;
+    padding:0;
+    padding-left:10px;
+    list-style-position: inside;
+}
+
+.back-button#mybackbt {
+  background: rgba(255,255,255,0.2);
+  color:#FFF; 
+  border:solid 1px #ddd ;
+  margin-left:80px;
+}
+#mybackbt:hover {
+    color: #222;
+    border-color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.8);
+    transition: all 0.1s ease;
+}
+.subscribe-button#mysubbt {
+  background: rgba(255,255,255,0.3);
+  color:#FFF; 
+  border:solid 1px #fff ;
+  margin-right:80px;
+}
+#mysubbt:hover {
+    color: #222;
+    border-color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.8);
+    transition: all 0.1s ease;
+}

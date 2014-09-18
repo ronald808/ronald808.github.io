@@ -3,7 +3,7 @@ layout: post
 title: Objects Detection in  Sonar Images
 ---
 
-Side-looking sonars transmit acoustic pulses and record the back-scattered energy to form images of the seafloor. These systems are very efficient at scanning large area for things like geologic formation, fish habitat, mines, ship/plane wrecks, etc. The image below (left) show the principle of operation of SLS system and the shadow created by a object on the seafloor. On the right image, we can see a typical SLS image showing a mooring block and its shadow:
+Side-looking sonars transmit acoustic pulses and record the back-scattered energy to form images of the seafloor. These systems are very efficient at scanning large area for things like geologic formations, fish habitats, mines, ship/plane wrecks, etc. The image below (left) show the principle of operation of an SLS system with an object acoustic shadow on the seafloor. On the right image, we can see a typical SLS image showing a mooring block and its shadow:
 
 <table>
 <tr>
@@ -20,7 +20,7 @@ The acoustic shadows cast by objects is often easier to detect than the bright r
 
 ![SLS image](/assets/images/sls-step1.jpg )
 
-Due to the geometry of the problem, objects of identical size will cast different shadows depending on their distance to the sensor. Near range object will cast short shadows while far range object will cast very long shadows. So before we run any image processing algorithm, let's re-sample the image to compensate for shadow length variation (below, left):
+Due to the geometry of the problem, objects of identical size will cast different shadows depending on their distance to the sensor. Near range objects cast short shadows while far range object cast very long ones. So before we run any image processing algorithm, let's re-sample the image to compensate for shadow length variations (below, left):
 
 <table>
 <tr>
@@ -30,11 +30,11 @@ Due to the geometry of the problem, objects of identical size will cast differen
 </table>
 
 
-We can see that the far range samples have lower amplitude that near range ones due to energy dispersion, so we need to normalize image across track (above, right)
+We can see that the far range samples have lower amplitudes that near range ones due to energy dispersion, so we need to normalize image across track (above, right)
 
-If we define an approximate size for shadows of interest (green box), we can now run a match-filter to detect shadow over background area and define their bounding box(red boxes).
+If we define an approximate size for shadows of interest (green box), we can now run a match-filter to detect a shadow over its background area and define their bounding box(red boxes).
 
-We read the process for highlights (object returns) to create 3 bounding boxes: shadow, object and capture area to be store on disk for further analysis:
+We use a similar process for highlights (object returns) to create 3 bounding boxes: shadow, object and capture area to be store on disk for further analysis:
 
 
 ![SLS image](/assets/images/sls-step4.png )  

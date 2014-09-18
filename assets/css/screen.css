@@ -485,7 +485,7 @@ margin on the iframe, cause it breaks stuff. */
 
 .main-nav {
     position: relative;
-    padding: 35px 40px;
+    padding: 30px 0 30px 0;
     margin: 0 0 0 0;
 }
 
@@ -876,7 +876,7 @@ body:not(.post-template) .post-title {
 /* Keep images centred and within the bounds of the post-width */
 .post-content img {
     display: block;
-    max-width: 100%;
+    max-width: 90%;
     height: auto;
     margin: 0 auto;
     padding: 0.6em 0;

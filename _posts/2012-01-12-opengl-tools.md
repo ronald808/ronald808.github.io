@@ -3,7 +3,7 @@ title: Tools for OpenGL
 layout: post
 ---
 
-OpenGL and its ES variant dominates the mobile  market and Unix world, but the situation on Windows platform is clearly in favor of Direct3D. From the outside, OpenGL still has the cross-platform advantage, but from a developer perspective OpenGL desktop has become a second class citizen in term of video driver quality, et productivity tools. AMD and NVIDIA do offer so tools but my experience with these have been mixed:
+OpenGL and its ES variant dominate the mobile  market and Unix world, but the situation on Windows platform is clearly in favor of Direct3D. From the outside, OpenGL still has the cross-platform advantage, but from a developer perspective OpenGL desktop has become a second class citizen in term of video driver quality, et productivity tools. AMD and NVIDIA do offer so tools but my experiences with them have been mixed:
 
 - RenderMonkey ATI/AMD (shader development) is being phased out.
 - GPU PerfStudio 2 (AMD): VERY limited support for OpenGL. Very unstable.

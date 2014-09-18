@@ -32,10 +32,10 @@ about: 'about.html'
         </header>
         <section class="post-excerpt">
             <img src="{{site.baseurl}}/assets/images/thumb-{{post.date | date:"%Y-%m-%d" }}.jpg" style="float:left; padding-right:1em; padding-top:0.5em"/>
+            <span class="post-meta"><time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date_to_string }}</time> {{!tags prefix="on "}}</span>
             <!--{{ post.excerpt }}-->
             {{ post.content | strip_html | truncatewords:55}}
         </section>
-            <span class="post-meta"><time datetime="{{ post.date | date:"%Y-%m-%d" }}">{{ post.date | date_to_string }}</time> {{!tags prefix="on "}}</span>
     </article>
 
     {% endfor %}

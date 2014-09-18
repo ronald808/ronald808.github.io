@@ -4,80 +4,37 @@ disqus: false
 archive: true
 logo: /assets/images/article-header2.jpg 
 ---
-<style type="text/css">
-/*            #wrap {
-   width:100%;
-   margin:0 auto;
-}
-*/
-#left_col {
-   float:left;
-   margin:auto;
-   width:82%;
-}
-#right_col {
-   float:right;
-   width:110px;
-   font-size: 0.8em;
-   margin:0;
-   color:#aaa;
-   margin-top:7em;
-   font-family: 'Open Sans';
-}
-#right_col h5 {
-    margin:0;
-    padding:0;
-   margin-top:1em;
-    font-size:1.0em;
-}
-#right_col a {
-   color:#aaa;
-   text-decoration: none;    
-}
-#right_col a:hover{
-    color:#666;
-    font-weight: bold;
-}
-#right_col ul {
-    margin:0;
-    padding:0;
-    padding-left:10px;
-    list-style-position: inside;
-}
 
-.back-button#mybackbt {
-  background: rgba(255,255,255,0.2);
-  color:#FFF; 
-  border:solid 1px #ddd  
-}
-#mybackbt:hover {
-    color: #222;
-    border-color: rgba(255,255,255,0.8);
-    background: rgba(255,255,255,0.8);
-    transition: all 0.1s ease;
-}
-.subscribe-button#mysubbt {
-  background: rgba(255,255,255,0.3);
-  color:#FFF; 
-  border:solid 1px #fff ;
-  margin-right:80px;
-}
-#mysubbt:hover {
-    color: #222;
-    border-color: rgba(255,255,255,0.8);
-    background: rgba(255,255,255,0.8);
-    transition: all 0.1s ease;
-}
-</style>
-
-<nav class="main-nav clearfix" style="width:100%; background: url({{page.logo}})  no-repeat center center;background-size: cover;">
+<nav class="main-nav clearfix" style="width:100%; background: url({{page.logo}})  no-repeat center center; background-size: cover;">
     <a id="mybackbt" class="back-button icon-arrow-left" href="{{site.baseurl}}/index.html">Home</a>
     <a id="mysubbt" class="subscribe-button icon-feed" href="{{site.baseurl}}/rss/">Subscribe</a>
 </nav>
 
-<main class="content" role="main">
 
-    <div id="left_col">
+<main class="content" role="main">
+       <div id="archive-col">
+                 {% if page.archive %}
+                <section class="archive">
+                    <h5>Recents</h5>
+                    <ul>
+                        {% for post in site.posts limit:4 %}
+                            <li><a href="{{ post.url }}">{{ post.date | date_to_string }}</a></li>
+                        {% endfor %}    
+                    </ul>
+                </section>
+                <section class="archive">
+                    <h5>Archive</h5>
+                    <ul>
+                        {% for post in site.posts %}
+                            <li><a href="{{ post.url }}">{{ post.date | date_to_string }}</a></li>
+                        {% endfor %}    
+                    </ul>
+                </section>
+                {% endif %}
+        </div>
+    <!--
+    <div id="post-col">
+    -->
     <article class="post">
 
         <header class="post-header">
@@ -103,7 +60,7 @@ logo: /assets/images/article-header2.jpg
                     	<h4> {{ site.author }} </h4>
                     	<!-- Author Bio -->
                     	<p> 
-                    	Ronald is a C++ developer with a passion for 2D/3D vizualisation, Geographical systems and remote sensing.
+                    	Ronald is a C++ developer with a passion for 2D/3D vizualisation, geospacial systems and remote sensing.
                     	</p>
                     </article>
                 </section>                
@@ -145,39 +102,9 @@ logo: /assets/images/article-header2.jpg
         	
         </footer>
     </article>
-</div>
+<!-- </div> -->
+ 
 
-        <div id="right_col">
-                 {% if page.archive %}
-                <section class="archive">
-                    <h5>Recents</h5>
-                    <ul>
-                        {% for post in site.posts limit:4 %}
-                            <li><a href="{{ post.url }}">{{ post.date | date_to_string }}</a></li>
-                        {% endfor %}    
-                        <!--
-                        {% for post in site.posts %}
-                            <li><span>{{ post.date | date_to_string }}</span>  <a href="{{ post.url }}">{{ post.title }}</a></li>
-                        {% endfor %}    
-                    -->
-                    </ul>
-                </section>
-                <section class="archive">
-                    <h5>Archive</h5>
-                    <ul>
-                        {% for post in site.posts %}
-                            <li><a href="{{ post.url }}">{{ post.date | date_to_string }}</a></li>
-                        {% endfor %}    
-                        <!--
-                        {% for post in site.posts %}
-                            <li><span>{{ post.date | date_to_string }}</span>  <a href="{{ post.url }}">{{ post.title }}</a></li>
-                        {% endfor %}    
-                    -->
-                    </ul>
-                </section>
-                {% endif %}
-        </div>
-            <!--</div>-->
         <div style="clear:both;"></div>
 
 

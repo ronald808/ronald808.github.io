@@ -31,7 +31,7 @@ The graphs:
 
 ![B tree svg]({{site.baseurl}}/assets/images/btree-sample.png)
 
-If we print the tree before a after the erroneous operation, we can usually visualize what when wrong and trace the issue back the code.
+If we print the tree before and after the erroneous operation, we can usually visualize what when wrong and trace the issue back to the code.
  
 
 
